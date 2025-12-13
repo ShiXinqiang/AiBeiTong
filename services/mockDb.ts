@@ -2,12 +2,70 @@ import { User, Post, Message, PostCategory, News, Comment, FavoriteItem, Job, Fr
 import { MOCK_JOBS } from '../constants';
 
 // --- PRODUCTION CONFIGURATION ---
-// Initial Mock Data is EMPTY for deployment
 const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/avataaars/svg?seed=";
 const DEFAULT_BG = "https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=800&q=80";
 
-const MOCK_USERS: User[] = []; // Starts empty
-const MOCK_POSTS: Post[] = []; // Starts empty
+// Pre-populated data for Myanmar context
+const MOCK_USERS: User[] = [
+  {
+    id: 'u_1',
+    username: 'admin',
+    password: 'password', // Demo only
+    name: 'Lin Htet (林赫)',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lin',
+    title: 'HR Manager',
+    bio: '专注缅甸华人企业招聘5年，有需要找工作的可以私信我。',
+    location: '仰光 (Yangon)',
+    joinedAt: Date.now() - 10000000,
+    contacts: [],
+    favorites: [],
+    likedPosts: [],
+    pinnedChats: [],
+    backgroundImage: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=800&q=80',
+    privacySettings: { allowStrangerView10: true, requireFriendVerify: false, visibleToSearch: true }
+  },
+  {
+    id: 'u_2',
+    username: 'user2',
+    name: 'Ei Ei Phyo',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=EiEi',
+    title: '中文翻译',
+    bio: '正在寻找曼德勒附近的翻译工作。',
+    location: '曼德勒 (Mandalay)',
+    joinedAt: Date.now() - 5000000,
+    contacts: [],
+    favorites: [],
+    likedPosts: [],
+    pinnedChats: [],
+    backgroundImage: 'https://images.unsplash.com/photo-1620912189865-1e8a33da4c5e?auto=format&fit=crop&w=800&q=80',
+    privacySettings: { allowStrangerView10: true, requireFriendVerify: true, visibleToSearch: true }
+  }
+];
+
+const MOCK_POSTS: Post[] = [
+  {
+    id: 'p_1',
+    userId: 'u_1',
+    content: '【急招】仰光莱达雅工业区鞋厂招聘：\n1. 生产主管 (2名) - 薪资面议\n2. 仓库管理员 (3名) - 60万MMK起\n有意者请直接私信或发简历！',
+    category: 'job',
+    likes: 12,
+    comments: 3,
+    timestamp: Date.now() - 3600000 * 2,
+    user: MOCK_USERS[0]
+  },
+  {
+    id: 'p_2',
+    userId: 'u_2',
+    content: '今天去面试了一家公司，感觉环境不错，希望不仅能赚钱，还能学到东西！大家找工作都要加油哦！💪',
+    image: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80',
+    category: 'image',
+    likes: 45,
+    comments: 8,
+    timestamp: Date.now() - 3600000 * 5,
+    user: MOCK_USERS[1]
+  }
+];
+
 const MOCK_NEWS: News[] = [
   {
     id: 'n1',
