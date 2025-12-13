@@ -2,62 +2,104 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#ffffff" />
-    <title>爱贝通 - AiBeiTong</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>爱贝通 - 缅甸职通车</title>
+    
+    <!-- 1. 样式库 (Tailwind) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. 图标库 (Lucide) - 确保在 main.ts 之前加载 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 3. 字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
       body {
         font-family: 'Noto Sans SC', sans-serif;
         -webkit-tap-highlight-color: transparent;
+        padding-bottom: env(safe-area-inset-bottom);
       }
-      /* Hide scrollbar for clean app look */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      #root:empty::before {
-        content: 'Loading...';
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      /* Loading State */
+      #app:empty::before {
+        content: '正在启动爱贝通...';
         display: block;
         text-align: center;
-        padding-top: 50px;
+        padding-top: 20vh;
         color: #64748b;
+        font-weight: 500;
+        font-size: 1.1rem;
+      }
+
+      /* Error Container */
+      #error-container {
+        display: none;
+        position: fixed;
+        top: 0; 
+        left: 0; 
+        right: 0;
+        z-index: 10000;
+        background: #fef2f2;
+        color: #b91c1c;
+        padding: 16px;
+        font-size: 12px;
+        border-bottom: 1px solid #fecaca;
+        white-space: pre-wrap;
       }
     </style>
-    <!-- Error Handler for White Screen Debugging -->
+    
+    <!-- 4. 关键修复：模拟 process 环境，防止 geminiService 报错 -->
     <script>
-      window.addEventListener('error', function(e) {
-        // Ignore resize observer errors which are harmless
-        if (e.message === 'ResizeObserver loop limit exceeded') return;
-        
-        console.error('Global Error:', e.message);
-      });
+      window.process = {
+        env: {
+          NODE_ENV: 'development',
+          API_KEY: '' // 防止读取 undefined 报错
+        }
+      };
     </script>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.10.1",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
     "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.3",
+    "vue": "https://esm.sh/vue@^3.5.25",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-vue-next": "https://esm.sh/lucide-vue-next@^0.561.0",
+    "react": "https://esm.sh/react@^19.2.3",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
     "vite": "https://esm.sh/vite@^7.2.7",
     "path": "https://esm.sh/path@^0.12.7",
-    "jsqr": "https://esm.sh/jsqr@^1.4.0"
+    "@capacitor/cli": "https://esm.sh/@capacitor/cli@^8.0.0"
   }
 }
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-slate-50 text-slate-900 antialiased h-screen overflow-hidden selection:bg-emerald-100">
-    <div id="root" class="h-full"></div>
-    <script type="module" src="./index.tsx"></script>
+    <div id="error-container"></div>
+    <div id="app" class="h-full w-full mx-auto md:max-w-md bg-white relative overflow-hidden flex flex-col shadow-2xl"></div>
+    
+    <script>
+      // 全局错误捕获
+      window.onerror = function(msg, src, line, col, error) {
+        console.error("Global Error:", msg, error);
+        const el = document.getElementById('error-container');
+        if(el) {
+          el.style.display = 'block';
+          el.textContent = '启动错误: ' + msg;
+        }
+        // 如果出错，尝试强制清除 loading 状态
+        const app = document.getElementById('app');
+        if (app && app.innerHTML === '') {
+            app.innerHTML = '<div class="p-4 text-center"><h2 class="text-xl font-bold mb-2">启动失败</h2><button onclick="location.reload()" class="bg-emerald-600 text-white px-4 py-2 rounded">点击重试</button></div>';
+        }
+      };
+    </script>
+
+    <script type="module" src="./src/main.ts"></script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>

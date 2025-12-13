@@ -95,6 +95,7 @@ class MockDB {
 
   // --- Backend Simulation Helpers ---
   private getUsers(): User[] { return this.getSafe('db_users', MOCK_USERS); }
+  public getAllUsersPublic(): Promise<User[]> { return Promise.resolve(this.getUsers()); }
   private saveUsers(users: User[]) { localStorage.setItem('db_users', JSON.stringify(users)); }
   private getPosts(): Post[] { return this.getSafe('db_posts', MOCK_POSTS); }
   private savePosts(posts: Post[]) { localStorage.setItem('db_posts', JSON.stringify(posts)); }

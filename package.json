@@ -1,25 +1,26 @@
 {
-  "name": "myanmar-job-link",
+  "name": "myanmar-job-link-vanilla",
   "private": true,
-  "version": "1.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:sync": "npx cap sync",
+    "cap:android": "npx cap open android",
+    "cap:ios": "npx cap open ios"
   },
   "dependencies": {
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/ios": "^5.7.0",
     "@google/genai": "^1.33.0",
-    "jsqr": "^1.4.0",
-    "lucide-react": "^0.561.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.5"
+    "@supabase/supabase-js": "^2.39.3",
+    "lucide": "^0.344.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@capacitor/cli": "^5.7.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }
