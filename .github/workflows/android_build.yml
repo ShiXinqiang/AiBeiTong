@@ -1,0 +1,57 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch: # 允许手动点击按钮触发构建
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Web Assets
+        run: npm run build
+        env:
+          # 如果你有 API Key 可以在 GitHub Secrets 里配置，或者暂时留空
+          API_KEY: ${{ secrets.API_KEY }} 
+
+      - name: Add Android Platform
+        # 初始化安卓项目结构
+        run: |
+          npm install @capacitor/android
+          npx cap add android
+          npx cap sync
+
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: aibeitong-app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 5
