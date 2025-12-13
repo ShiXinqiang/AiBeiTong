@@ -1,0 +1,7 @@
+{
+  "name": "缅甸职通车 (MyanmarJobLink)",
+  "description": "专为缅甸本地华人及缅甸民众设计的求职招聘平台，提供AI辅助职位发布与简历匹配功能，连接仰光、曼德勒等地的工作机会。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
