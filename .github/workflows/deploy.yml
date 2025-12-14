@@ -24,14 +24,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Set up Node
+      - name: Detect lockfile
+        id: lock
+        run: |
+          if [ -f package-lock.json ]; then echo "lockfile=package-lock.json" >> $GITHUB_OUTPUT
+          elif [ -f yarn.lock ]; then echo "lockfile=yarn.lock" >> $GITHUB_OUTPUT
+          else echo "lockfile=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Node (cached)
+        if: ${{ steps.lock.outputs.lockfile != '' }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-          
+          cache-dependency-path: ${{ steps.lock.outputs.lockfile }}
+
+      - name: Set up Node (no cache)
+        if: ${{ steps.lock.outputs.lockfile == '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile
+          else
+            npm install
+          fi
         
       - name: Build
         run: npm run build
